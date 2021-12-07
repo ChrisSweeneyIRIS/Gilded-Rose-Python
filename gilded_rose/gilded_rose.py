@@ -8,17 +8,16 @@ class GildedRose(object):
             if item.name != "Aged Brie" and item.name != "Backstage passes to a TAFKAL80ETC concert":
                 if item.quality > 0:
                     if item.name != "Sulfuras, Hand of Ragnaros":
-                        item.quality = item.quality - 1
+                        self.increase_quality(item, -1)
             else:
-                if item.quality < 50:
+                max_quality = 50
+                if item.quality < max_quality:
                     item.quality = item.quality + 1
-                    if item.name == "Backstage passes to a TAFKAL80ETC concert":
-                        if item.sell_in < 11:
-                            if item.quality < 50:
-                                item.quality = item.quality + 1
+                    if item.name == "Backstage passes to a TAFKAL80ETC concert" and item.quality < max_quality:
                         if item.sell_in < 6:
-                            if item.quality < 50:
-                                item.quality = item.quality + 1
+                            self.increase_quality(item, 2)
+                        elif item.sell_in < 11:
+                            self.increase_quality(item, 1)
             if item.name != "Sulfuras, Hand of Ragnaros":
                 item.sell_in = item.sell_in - 1
             if item.sell_in < 0:
@@ -26,9 +25,12 @@ class GildedRose(object):
                     if item.name != "Backstage passes to a TAFKAL80ETC concert":
                         if item.quality > 0:
                             if item.name != "Sulfuras, Hand of Ragnaros":
-                                item.quality = item.quality - 1
+                                self.increase_quality(item, -1)
                     else:
                         item.quality = item.quality - item.quality
                 else:
                     if item.quality < 50:
-                        item.quality = item.quality + 1
+                        self.increase_quality(item, 1)
+
+    def increase_quality(self, item, increment):
+        item.quality += increment
